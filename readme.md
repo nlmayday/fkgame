@@ -1,3 +1,9 @@
+# flutter game app
+
+## cursor 开发
+
+## 项目结构
+```
 lib/
 ├── main.dart                     # 应用入口，初始化配置（主题、语言、路由、依赖注入）
 ├── app.dart                      # 根组件，配置全局设置（MaterialApp、主题、路由）
@@ -157,6 +163,11 @@ lib/
 │   │       │   └── messages.dart
 │   │       └── widgets/          # UI 组件
 │   │           └── notification_card.dart
+│   └── home/                     # 新增 home 模块
+│       ├── logic/                # 状态管理
+│       │   └── home_bloc.dart    # 新增 home 状态管理
+│       └── pages/                # 新增 home 页面
+│           └── home_page.dart    # 新增 home 页面
 ├── l10n/                         # 国际化资源
 │   ├── intl_en.arb               # 英文翻译
 │   ├── intl_zh.arb               # 中文翻译
@@ -174,3 +185,4 @@ lib/
         ├── user/
         ├── gameplay/
         └── social/# fkgame
+```

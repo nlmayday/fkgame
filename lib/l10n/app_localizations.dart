@@ -758,8 +758,6 @@ class AppLocalizations {
   String get exp => _localizedValues[locale.languageCode]?['exp'] ?? 'EXP';
   String get gamePoints =>
       _localizedValues[locale.languageCode]?['gamePoints'] ?? 'Game Points';
-  String get recharge =>
-      _localizedValues[locale.languageCode]?['recharge'] ?? 'Recharge';
   String get functionMenu =>
       _localizedValues[locale.languageCode]?['functionMenu'] ?? 'Functions';
   String get gameRecords =>
