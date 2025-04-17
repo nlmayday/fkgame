@@ -8,6 +8,9 @@ import 'package:fkgame/features/home/logic/home_bloc.dart';
 import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/auth/data/models/user_model.dart';
 import 'package:fkgame/core/services/mock_service.dart';
+import 'package:fkgame/features/user/pages/recharge_records_page.dart';
+import 'package:fkgame/features/user/pages/game_records_page.dart';
+import 'package:fkgame/features/user/pages/coin_history_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -289,6 +292,27 @@ class _ProfilePageState extends State<ProfilePage>
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           minimumSize: const Size(0, 0),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      InkWell(
+                        onTap: () => _showCoinHistoryPage(context),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.history,
+                              color: Colors.amber,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              AppLocalizations.of(context).coinRecords,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -838,9 +862,10 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   void _showGameHistoryPage(BuildContext context) {
-    ScaffoldMessenger.of(
+    Navigator.push(
       context,
-    ).showSnackBar(const SnackBar(content: Text('游戏历史功能将在后续版本推出')));
+      MaterialPageRoute(builder: (context) => const GameRecordsPage()),
+    );
   }
 
   void _showFavoritesPage(BuildContext context) {
@@ -865,6 +890,14 @@ class _ProfilePageState extends State<ProfilePage>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('游戏详情：${game.name}')));
+  }
+
+  // 添加新方法，导航到金币变动记录页面
+  void _showCoinHistoryPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CoinHistoryPage()),
+    );
   }
 }
 
@@ -1320,9 +1353,12 @@ class _WalletBottomSheetState extends State<_WalletBottomSheet> {
               onPressed: () {
                 // 查看更多充值记录
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
+                Navigator.push(
                   context,
-                ).showSnackBar(const SnackBar(content: Text('充值记录功能将在后续版本推出')));
+                  MaterialPageRoute(
+                    builder: (context) => const RechargeRecordsPage(),
+                  ),
+                );
               },
               child: const Text('查看更多'),
             ),
