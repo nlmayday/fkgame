@@ -45,5 +45,28 @@
   "errorRegisterFailed": "Registration failed, please try again later",
   "errorTokenRefreshFailed": "Failed to refresh token",
   "errorTokenNotExist": "Refresh token does not exist",
-  "errorUserGetInfoFailed": "Failed to get user information"
+  "errorUserGetInfoFailed": "Failed to get user information",
+  
+  "home": "Home",
+  "lobby": "Lobby",
+  "social": "Social",
+  "me": "Me",
+  "search": "Search",
+  "recommended": "Recommended for you",
+  "popular": "Popular",
+  "newGames": "New Games",
+  "seeAll": "See All",
+  "howToPlay": "How to Play",
+  "playNow": "Play Now",
+  "description": "Description",
+  "noDescriptionAvailable": "No description available for this game.",
+  "noPlayInstructionsAvailable": "No play instructions available for this game.",
+  "gameUrlNotAvailable": "Game URL not available",
+  "couldNotLaunchGameUrl": "Could not launch game URL",
+  
+  "retry": "Retry",
+  "searchGames": "Search Games",
+  "searchHint": "Enter keywords to search games",
+  "searchNoResults": "No games found",
+  "searchInputPrompt": "Enter keywords to search"
 } 

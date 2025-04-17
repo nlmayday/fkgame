@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app.dart';
 import 'core/di.dart';
 import 'core/services/log.dart';
+import 'features/auth/logic/auth_cubit.dart';
+import 'features/home/logic/home_bloc.dart';
 
 // 应用主入口
 Future<void> main() async {
@@ -33,10 +35,21 @@ Future<void> main() async {
   };
 
   // 启动应用并捕获全局异常
-  runZonedGuarded(() => runApp(const MyApp()), (error, stackTrace) {
-    developer.log('🔴 全局错误:', error: error, stackTrace: stackTrace);
-    getIt<LogService>().logError(error, stackTrace);
-  });
+  runZonedGuarded(
+    () => runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthCubit>(create: (context) => getIt<AuthCubit>()),
+          BlocProvider<HomeBloc>(create: (context) => getIt<HomeBloc>()),
+        ],
+        child: const MyApp(),
+      ),
+    ),
+    (error, stackTrace) {
+      developer.log('🔴 全局错误:', error: error, stackTrace: stackTrace);
+      getIt<LogService>().logError(error, stackTrace);
+    },
+  );
 }
 
 // Bloc观察器，用于调试状态管理

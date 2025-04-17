@@ -45,5 +45,28 @@
   "errorRegisterFailed": "注册失败，请稍后重试",
   "errorTokenRefreshFailed": "刷新令牌失败",
   "errorTokenNotExist": "刷新令牌不存在",
-  "errorUserGetInfoFailed": "获取用户信息失败"
+  "errorUserGetInfoFailed": "获取用户信息失败",
+  
+  "home": "首页",
+  "lobby": "游戏大厅",
+  "social": "社交",
+  "me": "我的",
+  "search": "搜索",
+  "recommended": "为您推荐",
+  "popular": "热门游戏",
+  "newGames": "新游戏",
+  "seeAll": "查看全部",
+  "howToPlay": "游戏玩法",
+  "playNow": "立即开始",
+  "description": "游戏介绍",
+  "noDescriptionAvailable": "暂无游戏介绍。",
+  "noPlayInstructionsAvailable": "暂无游戏玩法说明。",
+  "gameUrlNotAvailable": "游戏链接不可用",
+  "couldNotLaunchGameUrl": "无法启动游戏链接",
+  
+  "retry": "重试",
+  "searchGames": "搜索游戏",
+  "searchHint": "输入关键词搜索游戏",
+  "searchNoResults": "没有找到相关游戏",
+  "searchInputPrompt": "输入关键词搜索"
 } 

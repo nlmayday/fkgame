@@ -1,25 +1,40 @@
-/// API相关常量定义
+/// API相关常量
 class ApiConstants {
-  // 基础URL
-  static const String baseUrl = 'https://api.fkgame.com/v1';
+  // 禁止实例化
+  ApiConstants._();
 
-  // WebSocket URL
-  static const String wsUrl = 'wss://api.fkgame.com/ws';
+  /// Base URLs
+  static const String baseUrl = 'https://madlygame.com/api';
+  static const String wsUrl = 'wss://madlygame.com/ws';
 
-  // 超时设置（毫秒）
-  static const int connectionTimeout = 15000; // 连接超时
-  static const int receiveTimeout = 15000; // 接收超时
-  static const int sendTimeout = 15000; // 发送超时
+  /// API Endpoints
+  // 首页
+  static const String categoryList = '/fgIndex/category/list';
+  static const String banner = '/fgIndex/banner';
+  static const String gameList = '/fgIndex/game/list';
+
+  // 认证相关接口
+  static const String login = '/auth/login';
+  static const String register = '/auth/register';
+  static const String refreshToken = '/auth/refresh-token';
+  static const String logout = '/auth/logout';
+  static const String getUser = '/auth/me';
+
+  // 用户相关接口
+  static const String getUserProfile = '/user/profile';
+  static const String updateUserProfile = '/user/profile';
+  static const String uploadAvatar = '/user/avatar';
+
+  // 其他配置常量
+  static const int connectTimeout = 15000;
+  static const int receiveTimeout = 15000;
+  static const int sendTimeout = 15000;
 
   // WebSocket相关配置
   static const int wsReconnectDelay = 3000; // 重连延迟（毫秒）
   static const int wsHeartbeatInterval = 30000; // 心跳间隔（毫秒）
 
   // 端点路径
-  static const String loginEndpoint = '/auth/login';
-  static const String registerEndpoint = '/auth/register';
-  static const String refreshTokenEndpoint = '/auth/refresh';
-  static const String userProfileEndpoint = '/user/profile';
   static const String roomsEndpoint = '/gameplay/rooms';
   static const String friendsEndpoint = '/social/friends';
   static const String messagesEndpoint = '/social/messages';

@@ -75,13 +75,9 @@ class ApiClient {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
-        connectTimeout: const Duration(
-          milliseconds: ApiConstants.connectionTimeout,
-        ),
-        receiveTimeout: const Duration(
-          milliseconds: ApiConstants.receiveTimeout,
-        ),
-        sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeout),
+        connectTimeout: Duration(milliseconds: ApiConstants.connectTimeout),
+        receiveTimeout: Duration(milliseconds: ApiConstants.receiveTimeout),
+        sendTimeout: Duration(milliseconds: ApiConstants.sendTimeout),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -119,21 +115,38 @@ class ApiClient {
   Interceptor get _loggingInterceptor {
     return InterceptorsWrapper(
       onRequest: (options, handler) {
-        _logger.info('请求: ${options.method} ${options.uri}', options.data);
+        _logger.info('请求: ${options.method} ${options.uri}', {
+          'headers': options.headers,
+          'data': options.data,
+          'queryParams': options.queryParameters,
+        });
+        print('🌐 发送请求: ${options.method} ${options.uri}');
+        print('🌐 请求参数: ${options.data ?? '无'}');
+        print('🌐 请求查询: ${options.queryParameters ?? '无'}');
         return handler.next(options);
       },
       onResponse: (response, handler) {
         _logger.info(
           '响应: ${response.statusCode} ${response.requestOptions.uri}',
-          response.data,
+          {'data': response.data, 'headers': response.headers.map},
         );
+        print('✅ 响应成功: ${response.statusCode} ${response.requestOptions.uri}');
+        print('✅ 响应数据: ${response.data}');
         return handler.next(response);
       },
       onError: (DioException error, handler) {
         _logger.error(
           '错误: ${error.response?.statusCode} ${error.requestOptions.uri}',
-          error.response?.data,
+          {
+            'message': error.message,
+            'data': error.response?.data,
+            'error': error.toString(),
+          },
         );
+        print('❌ 请求错误: ${error.requestOptions.uri}');
+        print('❌ 错误状态: ${error.response?.statusCode ?? '无状态码'}');
+        print('❌ 错误信息: ${error.message}');
+        print('❌ 错误数据: ${error.response?.data ?? '无数据'}');
         return handler.next(error);
       },
     );

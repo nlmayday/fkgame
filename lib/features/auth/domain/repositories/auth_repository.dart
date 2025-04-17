@@ -19,4 +19,14 @@ abstract class AuthRepository {
 
   /// 刷新令牌
   Future<Either<Failure, AuthResponse>> refreshToken(String refreshToken);
+
+  /// 请求重置密码（发送重置邮件）
+  Future<Either<Failure, bool>> requestPasswordReset(String email);
+
+  /// 重置密码
+  Future<Either<Failure, bool>> resetPassword({
+    required String email,
+    required String token,
+    required String newPassword,
+  });
 }

@@ -9,11 +9,16 @@ import 'package:fkgame/core/services/log.dart';
 import 'package:fkgame/core/constants/api.dart';
 import 'package:fkgame/core/theme/theme_cubit.dart';
 import 'package:fkgame/core/localization/locale_cubit.dart';
+import 'package:fkgame/core/services/mock_service.dart';
 
 // 认证模块导入
 import 'package:fkgame/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:fkgame/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fkgame/features/auth/logic/auth_cubit.dart';
+
+// 首页模块导入
+import 'package:fkgame/features/home/data/repository/home_repository.dart';
+import 'package:fkgame/features/home/logic/home_bloc.dart';
 
 // Feature imports - commented out until implemented
 // import '../features/user/data/repository.dart';
@@ -61,6 +66,9 @@ Future<void> setupDependencies() async {
     () => LocaleCubit(getIt<StorageService>()),
   );
 
+  // 注册MockService
+  getIt.registerLazySingleton<MockService>(() => MockService());
+
   // 数据仓库
   _registerRepositories();
 
@@ -73,6 +81,11 @@ void _registerRepositories() {
   // 认证
   getIt.registerFactory<AuthRepository>(
     () => AuthRepositoryImpl(getIt<ApiClient>(), getIt<StorageService>()),
+  );
+
+  // 首页
+  getIt.registerFactory<HomeRepository>(
+    () => HomeRepositoryImpl(getIt<ApiClient>(), getIt<MockService>()),
   );
 
   // 其他仓库 - 暂时注释
@@ -115,6 +128,9 @@ void _registerCubits() {
       getIt<StorageService>(),
     ),
   );
+
+  // 首页功能
+  getIt.registerFactory<HomeBloc>(() => HomeBloc(getIt<HomeRepository>()));
 
   // 其他功能 - 暂时注释
   /*

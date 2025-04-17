@@ -7,6 +7,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/localization/locale_cubit.dart';
 import 'features/auth/logic/auth_cubit.dart'; // 添加认证Cubit
+import 'features/home/logic/home_bloc.dart';
 import 'l10n/app_localizations.dart'; // 更新导入
 // import 'l10n/app_localizations.dart'; // Will be implemented later
 import 'router.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ThemeCubit>(create: (_) => getIt<ThemeCubit>()),
         BlocProvider<LocaleCubit>(create: (_) => getIt<LocaleCubit>()),
         BlocProvider<AuthCubit>(create: (_) => getIt<AuthCubit>()),
+        BlocProvider<HomeBloc>(create: (_) => getIt<HomeBloc>()),
       ],
       child: _buildMaterialApp(),
     );

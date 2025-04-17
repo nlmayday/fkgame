@@ -26,6 +26,11 @@ class ErrorMessages {
   // 用户信息错误
   static const String getUserInfoFailed = 'errors.user.get_info_failed';
 
+  // 密码重置错误
+  static const String resetPasswordFailed = 'errors.password.reset_failed';
+  static const String resetEmailNotFound = 'errors.password.email_not_found';
+  static const String resetTokenInvalid = 'errors.password.token_invalid';
+
   // 错误代码映射
   static String getMessageByCode(String code) {
     final Map<String, String> codeToMessage = {

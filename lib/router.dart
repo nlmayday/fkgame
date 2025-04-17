@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:fkgame/core/constants/routes.dart';
 import 'package:fkgame/features/auth/pages/login_page.dart';
 import 'package:fkgame/features/auth/pages/register_page.dart';
+import 'package:fkgame/main_page.dart';
+import 'package:fkgame/features/auth/pages/forgot_password_page.dart';
 
 /// 路由管理器
 class AppRouter {
@@ -17,7 +19,7 @@ class AppRouter {
       // 初始页面
       GoRoute(
         path: Routes.splash,
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => const MainPage(),
       ),
       // 登录页面
       GoRoute(
@@ -29,36 +31,16 @@ class AppRouter {
         path: Routes.register,
         builder: (context, state) => const RegisterPage(),
       ),
+      // 忘记密码页面
+      GoRoute(
+        path: Routes.forgotPassword,
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
       // 首页
-      GoRoute(path: Routes.home, builder: (context, state) => const HomePage()),
+      GoRoute(path: Routes.home, builder: (context, state) => const MainPage()),
     ],
     errorBuilder: (context, state) => ErrorPage(error: state.error),
   );
-}
-
-/// 临时首页
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('FKGame')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Welcome to FKGame', style: TextStyle(fontSize: 24)),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => GoRouter.of(context).go(Routes.login),
-              child: const Text('Go to Login'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 /// 错误页面

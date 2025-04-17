@@ -44,7 +44,7 @@ class AppLocalizations {
       'games': 'Games',
       'myGames': 'My Games',
       'popular': 'Popular',
-      'recommended': 'Recommended',
+      'recommended': 'Recommended for you',
       'newGames': 'New Games',
       'seeAll': 'See All',
       'ranking': 'Ranking',
@@ -58,6 +58,47 @@ class AppLocalizations {
       'lobby': 'Lobby',
       'social': 'Social',
       'me': 'Me',
+
+      // 游戏详情页
+      'howToPlay': 'How to Play',
+      'playNow': 'Play Now',
+      'description': 'Description',
+      'noDescriptionAvailable': 'No description available for this game.',
+      'noPlayInstructionsAvailable':
+          'No play instructions available for this game.',
+      'gameUrlNotAvailable': 'Game URL not available',
+      'couldNotLaunchGameUrl': 'Could not launch game URL',
+
+      // 通用按钮和提示
+      'retry': 'Retry',
+
+      // 搜索相关文本
+      'searchGames': 'Search Games',
+      'searchHint': 'Enter keywords to search games',
+      'searchNoResults': 'No games found',
+      'searchInputPrompt': 'Enter keywords to search',
+
+      // 密码重置相关
+      'resetPassword': 'Reset Password',
+      'newPassword': 'New Password',
+      'enterEmailToReset':
+          'Enter your email address and we\'ll send you a link to reset your password.',
+      'sendResetLink': 'Send Reset Link',
+      'backToLogin': 'Back to Login',
+      'emailRequired': 'Email is required',
+      'invalidEmail': 'Please enter a valid email address',
+      'resetLinkSent': 'Reset link has been sent to your email',
+      'enterTokenAndNewPassword':
+          'Enter the reset token sent to your email and your new password',
+      'resetToken': 'Reset Token',
+      'resetTokenHint': 'Enter the code from your email',
+      'resetTokenRequired': 'Reset token is required',
+      'passwordRequired': 'Password is required',
+      'passwordTooShort': 'Password must be at least 6 characters',
+      'confirmPasswordRequired': 'Please confirm your password',
+      'passwordsDoNotMatch': 'Passwords do not match',
+      'passwordResetSuccess': 'Your password has been reset successfully',
+      'backToStep1': 'Back to Step 1',
     },
     'zh': {
       'appName': 'FKGame',
@@ -85,8 +126,8 @@ class AppLocalizations {
       'welcome': '欢迎',
       'games': '游戏',
       'myGames': '我的游戏',
-      'popular': '热门',
-      'recommended': '推荐',
+      'popular': '热门游戏',
+      'recommended': '为您推荐',
       'newGames': '新游戏',
       'seeAll': '查看全部',
       'ranking': '排行榜',
@@ -97,9 +138,47 @@ class AppLocalizations {
       'messages': '消息',
       'search': '搜索游戏...',
       'home': '首页',
-      'lobby': '大厅',
+      'lobby': '游戏大厅',
       'social': '社交',
       'me': '我的',
+
+      // 游戏详情页
+      'howToPlay': '游戏玩法',
+      'playNow': '立即开始',
+      'description': '游戏介绍',
+      'noDescriptionAvailable': '暂无游戏介绍。',
+      'noPlayInstructionsAvailable': '暂无游戏玩法说明。',
+      'gameUrlNotAvailable': '游戏链接不可用',
+      'couldNotLaunchGameUrl': '无法启动游戏链接',
+
+      // 通用按钮和提示
+      'retry': '重试',
+
+      // 搜索相关文本
+      'searchGames': '搜索游戏',
+      'searchHint': '输入关键词搜索游戏',
+      'searchNoResults': '没有找到相关游戏',
+      'searchInputPrompt': '输入关键词搜索',
+
+      // 密码重置相关
+      'resetPassword': '重置密码',
+      'newPassword': '新密码',
+      'enterEmailToReset': '请输入您的邮箱地址，我们将发送链接以重置您的密码。',
+      'sendResetLink': '发送重置链接',
+      'backToLogin': '返回登录',
+      'emailRequired': '邮箱是必填的',
+      'invalidEmail': '请输入有效的邮箱地址',
+      'resetLinkSent': '重置链接已发送至您的邮箱',
+      'enterTokenAndNewPassword': '输入收到的重置令牌和您的新密码',
+      'resetToken': '重置令牌',
+      'resetTokenHint': '输入邮箱中的代码',
+      'resetTokenRequired': '重置令牌是必填的',
+      'passwordRequired': '密码是必填的',
+      'passwordTooShort': '密码至少需要6个字符',
+      'confirmPasswordRequired': '请确认密码',
+      'passwordsDoNotMatch': '两次输入的密码不一致',
+      'passwordResetSuccess': '您的密码已成功重置',
+      'backToStep1': '返回步骤1',
     },
   };
 
@@ -187,6 +266,41 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]?['social'] ?? 'Social';
   String get me => _localizedValues[locale.languageCode]?['me'] ?? 'Me';
 
+  // 游戏详情页文本 getter
+  String get howToPlay =>
+      _localizedValues[locale.languageCode]?['howToPlay'] ?? 'How to Play';
+  String get playNow =>
+      _localizedValues[locale.languageCode]?['playNow'] ?? 'Play Now';
+  String get description =>
+      _localizedValues[locale.languageCode]?['description'] ?? 'Description';
+  String get noDescriptionAvailable =>
+      _localizedValues[locale.languageCode]?['noDescriptionAvailable'] ??
+      'No description available for this game.';
+  String get noPlayInstructionsAvailable =>
+      _localizedValues[locale.languageCode]?['noPlayInstructionsAvailable'] ??
+      'No play instructions available for this game.';
+  String get gameUrlNotAvailable =>
+      _localizedValues[locale.languageCode]?['gameUrlNotAvailable'] ??
+      'Game URL not available';
+  String get couldNotLaunchGameUrl =>
+      _localizedValues[locale.languageCode]?['couldNotLaunchGameUrl'] ??
+      'Could not launch game URL';
+
+  // Common buttons and messages
+  String get retry =>
+      _localizedValues[locale.languageCode]?['retry'] ?? 'Retry';
+
+  // Search related texts
+  String get searchHint =>
+      _localizedValues[locale.languageCode]?['searchHint'] ??
+      'Enter keywords to search games';
+  String get searchNoResults =>
+      _localizedValues[locale.languageCode]?['searchNoResults'] ??
+      'No games found';
+  String get searchInputPrompt =>
+      _localizedValues[locale.languageCode]?['searchInputPrompt'] ??
+      'Enter keywords to search';
+
   // 表单验证相关文本
   static final Map<String, Map<String, String>> _validationMessages = {
     'en': {
@@ -272,6 +386,58 @@ class AppLocalizations {
         _errorMessages['en']?['$mainKey.$subKey'] ??
         'Unknown error';
   }
+
+  // 密码重置相关 getter
+  String get resetPassword =>
+      _localizedValues[locale.languageCode]?['resetPassword'] ??
+      'Reset Password';
+  String get newPassword =>
+      _localizedValues[locale.languageCode]?['newPassword'] ?? 'New Password';
+  String get enterEmailToReset =>
+      _localizedValues[locale.languageCode]?['enterEmailToReset'] ??
+      'Enter your email address and we\'ll send you a link to reset your password.';
+  String get sendResetLink =>
+      _localizedValues[locale.languageCode]?['sendResetLink'] ??
+      'Send Reset Link';
+  String get backToLogin =>
+      _localizedValues[locale.languageCode]?['backToLogin'] ?? 'Back to Login';
+  String get emailRequired =>
+      _localizedValues[locale.languageCode]?['emailRequired'] ??
+      'Email is required';
+  String get invalidEmail =>
+      _localizedValues[locale.languageCode]?['invalidEmail'] ??
+      'Please enter a valid email address';
+  String get resetLinkSent =>
+      _localizedValues[locale.languageCode]?['resetLinkSent'] ??
+      'Reset link has been sent to your email';
+  String get enterTokenAndNewPassword =>
+      _localizedValues[locale.languageCode]?['enterTokenAndNewPassword'] ??
+      'Enter the reset token sent to your email and your new password';
+  String get resetToken =>
+      _localizedValues[locale.languageCode]?['resetToken'] ?? 'Reset Token';
+  String get resetTokenHint =>
+      _localizedValues[locale.languageCode]?['resetTokenHint'] ??
+      'Enter the code from your email';
+  String get resetTokenRequired =>
+      _localizedValues[locale.languageCode]?['resetTokenRequired'] ??
+      'Reset token is required';
+  String get passwordRequired =>
+      _localizedValues[locale.languageCode]?['passwordRequired'] ??
+      'Password is required';
+  String get passwordTooShort =>
+      _localizedValues[locale.languageCode]?['passwordTooShort'] ??
+      'Password must be at least 6 characters';
+  String get confirmPasswordRequired =>
+      _localizedValues[locale.languageCode]?['confirmPasswordRequired'] ??
+      'Please confirm your password';
+  String get passwordsDoNotMatch =>
+      _localizedValues[locale.languageCode]?['passwordsDoNotMatch'] ??
+      'Passwords do not match';
+  String get passwordResetSuccess =>
+      _localizedValues[locale.languageCode]?['passwordResetSuccess'] ??
+      'Your password has been reset successfully';
+  String get backToStep1 =>
+      _localizedValues[locale.languageCode]?['backToStep1'] ?? 'Back to Step 1';
 }
 
 class _AppLocalizationsDelegate
