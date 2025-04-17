@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 

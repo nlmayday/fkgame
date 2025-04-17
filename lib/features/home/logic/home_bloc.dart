@@ -2,18 +2,20 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/home/data/models/banner_model.dart';
-import 'package:fkgame/features/home/data/models/category_model.dart';
+import 'package:fkgame/core/models/category_model.dart';
 import 'package:fkgame/features/home/data/repository/home_repository.dart';
+import 'package:fkgame/core/repositories/game_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository _homeRepository;
+  final GameRepository _gameRepository;
 
-  HomeBloc(this._homeRepository) : super(HomeInitial()) {
+  HomeBloc(this._homeRepository, this._gameRepository) : super(HomeInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
     on<RefreshHomeData>(_onRefreshHomeData);
     on<LoadCategoryGames>(_onLoadCategoryGames);
@@ -31,43 +33,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     try {
       // 获取轮播图
-      final bannersResult = await _homeRepository.getBanners();
+      final banners = await _gameRepository.getBanners();
 
       // 获取分类列表
-      final categoriesResult = await _homeRepository.getCategories();
+      final categories = await _gameRepository.getCategories();
 
       // 获取热门游戏
-      final hotGamesResult = await _homeRepository.getHotGames(
-        page: 1,
-        pageSize: 10,
-      );
+      final hotGames = await _gameRepository.getHotGames(page: 1, pageSize: 10);
 
       // 获取新游戏
-      final newGamesResult = await _homeRepository.getNewGames(
-        page: 1,
-        pageSize: 10,
-      );
-
-      // 处理结果
-      final banners = bannersResult.fold(
-        (failure) => <BannerModel>[],
-        (banners) => banners,
-      );
-
-      final categories = categoriesResult.fold(
-        (failure) => <CategoryModel>[],
-        (categories) => categories,
-      );
-
-      final hotGames = hotGamesResult.fold(
-        (failure) => <GameModel>[],
-        (games) => games,
-      );
-
-      final newGames = newGamesResult.fold(
-        (failure) => <GameModel>[],
-        (games) => games,
-      );
+      final newGames = await _gameRepository.getNewGames(page: 1, pageSize: 10);
 
       // 获取默认分类的游戏
       String defaultCategoryId = '';
@@ -77,15 +52,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       List<GameModel> categoryGames = [];
       if (defaultCategoryId.isNotEmpty) {
-        final categoryGamesResult = await _homeRepository.getGamesByCategory(
-          categoryId: defaultCategoryId,
+        categoryGames = await _gameRepository.getGamesByCategory(
+          defaultCategoryId,
           page: 1,
           pageSize: 10,
-        );
-
-        categoryGames = categoryGamesResult.fold(
-          (failure) => <GameModel>[],
-          (games) => games,
         );
       }
 
@@ -111,7 +81,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       }
     } catch (e) {
-      emit(HomeError(message: 'An unexpected error occurred'));
+      emit(HomeError(message: 'An unexpected error occurred: ${e.toString()}'));
     }
   }
 
@@ -139,43 +109,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeLoading());
       }
 
-      // 获取各类数据
-      final bannersResult = await _homeRepository.getBanners();
-      final categoriesResult = await _homeRepository.getCategories();
-      final hotGamesResult = await _homeRepository.getHotGames(
+      // 获取各类数据，使用刷新参数
+      final banners = await _gameRepository.getBanners(refresh: true);
+      final categories = await _gameRepository.getCategories();
+      final hotGames = await _gameRepository.getHotGames(
+        refresh: true,
         page: 1,
         pageSize: 10,
       );
-      final newGamesResult = await _homeRepository.getNewGames(
+      final newGames = await _gameRepository.getNewGames(
+        refresh: true,
         page: 1,
         pageSize: 10,
-      );
-
-      // 处理结果
-      final banners = bannersResult.fold(
-        (failure) =>
-            currentState is HomeLoaded ? currentState.banners : <BannerModel>[],
-        (banners) => banners,
-      );
-
-      final categories = categoriesResult.fold(
-        (failure) =>
-            currentState is HomeLoaded
-                ? currentState.categories
-                : <CategoryModel>[],
-        (categories) => categories,
-      );
-
-      final hotGames = hotGamesResult.fold(
-        (failure) =>
-            currentState is HomeLoaded ? currentState.hotGames : <GameModel>[],
-        (games) => games,
-      );
-
-      final newGames = newGamesResult.fold(
-        (failure) =>
-            currentState is HomeLoaded ? currentState.newGames : <GameModel>[],
-        (games) => games,
       );
 
       // 获取当前分类的游戏
@@ -188,18 +133,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       List<GameModel> categoryGames = [];
       if (currentCategoryId.isNotEmpty) {
-        final categoryGamesResult = await _homeRepository.getGamesByCategory(
-          categoryId: currentCategoryId,
+        categoryGames = await _gameRepository.getGamesByCategory(
+          currentCategoryId,
+          refresh: true,
           page: 1,
           pageSize: 10,
-        );
-
-        categoryGames = categoryGamesResult.fold(
-          (failure) =>
-              currentState is HomeLoaded
-                  ? currentState.categoryGames
-                  : <GameModel>[],
-          (games) => games,
         );
       }
 
@@ -251,15 +189,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
 
-      final categoryGamesResult = await _homeRepository.getGamesByCategory(
-        categoryId: event.categoryId,
+      final categoryGames = await _gameRepository.getGamesByCategory(
+        event.categoryId,
+        refresh: true,
         page: event.page,
         pageSize: event.pageSize,
-      );
-
-      final categoryGames = categoryGamesResult.fold(
-        (failure) => loadedState.categoryGames,
-        (games) => games,
       );
 
       // Emit updated state with the new category games
@@ -296,14 +230,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     try {
       // 调用仓库的搜索方法
-      final searchResult = await _homeRepository.searchGames(
-        query: event.query,
-      );
-
-      // 处理结果
-      final searchResults = searchResult.fold(
-        (failure) => <GameModel>[],
-        (games) => games,
+      final searchResults = await _gameRepository.searchGames(
+        event.query,
+        page: 1,
+        pageSize: 20,
       );
 
       // 更新状态为搜索结果
@@ -343,18 +273,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       switch (event.type) {
         case 'recommended':
         case 'popular':
-          final result = await _homeRepository.getHotGames(
+          games = await _gameRepository.getHotGames(
             page: event.page,
             pageSize: event.pageSize,
           );
-          games = result.fold((failure) => <GameModel>[], (data) => data);
           break;
         case 'new':
-          final result = await _homeRepository.getNewGames(
+          games = await _gameRepository.getNewGames(
             page: event.page,
             pageSize: event.pageSize,
           );
-          games = result.fold((failure) => <GameModel>[], (data) => data);
           break;
         default:
           break;

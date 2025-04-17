@@ -5,9 +5,9 @@ import 'package:fkgame/core/network/api/client.dart';
 import 'package:fkgame/core/constants/api.dart';
 import 'package:fkgame/core/utils/api_response.dart';
 import 'package:fkgame/core/services/mock_service.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/home/data/models/banner_model.dart';
-import 'package:fkgame/features/home/data/models/category_model.dart';
+import 'package:fkgame/core/models/category_model.dart';
 
 /// 首页仓库接口
 abstract class HomeRepository {

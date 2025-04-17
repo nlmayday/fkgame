@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fkgame/core/theme/app_theme.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/home/logic/home_bloc.dart';
 import 'package:fkgame/l10n/app_localizations.dart';
 import 'package:fkgame/features/home/widgets/game_card.dart';
@@ -90,10 +90,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBarWithLogout(
         title: localizations.appName,
         additionalActions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _navigateToSearch,
-          ),
           IconButton(
             icon: const Icon(Icons.language),
             onPressed: () => _showLanguageOptions(context),
@@ -210,40 +206,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 欢迎信息
-          if (authState.isAuthenticated)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                '${localizations.welcome}, ${authState.user?.username ?? ""}!',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-
-          // 搜索框
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GestureDetector(
-              onTap: _navigateToSearch,
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: localizations.search,
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.surface,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                  ),
-                  readOnly: true,
-                ),
-              ),
-            ),
-          ),
-
           // 轮播图 - 使用BlocBuilder来获取最新状态
           BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
@@ -305,9 +267,12 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (context) => AllGamesPage(
-                        games: recommendedGames,
-                        type: GameListType.recommended,
+                      (context) => BlocProvider.value(
+                        value: context.read<HomeBloc>(),
+                        child: AllGamesPage(
+                          type: GameListType.recommended,
+                          categoryName: localizations.recommended,
+                        ),
                       ),
                 ),
               );
@@ -325,9 +290,12 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (context) => AllGamesPage(
-                        games: popularGames,
-                        type: GameListType.popular,
+                      (context) => BlocProvider.value(
+                        value: context.read<HomeBloc>(),
+                        child: AllGamesPage(
+                          type: GameListType.popular,
+                          categoryName: localizations.popular,
+                        ),
                       ),
                 ),
               );
@@ -344,9 +312,12 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (context) => AllGamesPage(
-                        games: newGames,
-                        type: GameListType.newGames,
+                      (context) => BlocProvider.value(
+                        value: context.read<HomeBloc>(),
+                        child: AllGamesPage(
+                          type: GameListType.newGames,
+                          categoryName: localizations.newGames,
+                        ),
                       ),
                 ),
               );
@@ -370,8 +341,12 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) =>
-                                  AllCategoriesPage(categories: categories),
+                              (context) => BlocProvider.value(
+                                value: context.read<HomeBloc>(),
+                                child: AllCategoriesPage(
+                                  categories: categories,
+                                ),
+                              ),
                         ),
                       );
                     },
@@ -392,22 +367,25 @@ class _HomePageState extends State<HomePage> {
                   return GameCategoryCard(
                     category: categories[index],
                     onTap: () {
-                      // 点击切换分类
+                      // 点击切换分类并加载该分类的游戏
                       context.read<HomeBloc>().add(
-                        SwitchCategory(categoryId: categories[index].id),
+                        LoadCategoryGames(
+                          categoryId: categories[index].id.toString(),
+                        ),
                       );
 
-                      // Navigate to see all games in this category
+                      // 导航到该分类的游戏列表页面
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) => AllGamesPage(
-                                games:
-                                    [], // Will be loaded by the SwitchCategory event
-                                type: GameListType.category,
-                                categoryId: categories[index].id,
-                                categoryName: categories[index].name,
+                              (context) => BlocProvider.value(
+                                value: context.read<HomeBloc>(),
+                                child: AllGamesPage(
+                                  type: GameListType.category,
+                                  categoryId: categories[index].id.toString(),
+                                  categoryName: categories[index].name,
+                                ),
                               ),
                         ),
                       );

@@ -77,6 +77,11 @@ class AppLocalizations {
       'searchHint': 'Enter keywords to search games',
       'searchNoResults': 'No games found',
       'searchInputPrompt': 'Enter keywords to search',
+      'searchGameCategories': 'Search game categories...',
+      'noGameCategoriesFound': 'No game categories found',
+      'clearFilters': 'Clear filters',
+      'allCategories': 'All',
+      'gameCategory': 'Game Category',
 
       // 密码重置相关
       'resetPassword': 'Reset Password',
@@ -159,6 +164,11 @@ class AppLocalizations {
       'searchHint': '输入关键词搜索游戏',
       'searchNoResults': '没有找到相关游戏',
       'searchInputPrompt': '输入关键词搜索',
+      'searchGameCategories': '搜索游戏分类...',
+      'noGameCategoriesFound': '没有找到相关游戏分类',
+      'clearFilters': '清除过滤器',
+      'allCategories': '全部',
+      'gameCategory': '游戏分类',
 
       // 密码重置相关
       'resetPassword': '重置密码',
@@ -300,6 +310,18 @@ class AppLocalizations {
   String get searchInputPrompt =>
       _localizedValues[locale.languageCode]?['searchInputPrompt'] ??
       'Enter keywords to search';
+  String get searchGameCategories =>
+      _localizedValues[locale.languageCode]?['searchGameCategories'] ??
+      'Search game categories...';
+  String get noGameCategoriesFound =>
+      _localizedValues[locale.languageCode]?['noGameCategoriesFound'] ??
+      'No game categories found';
+  String get clearFilters =>
+      _localizedValues[locale.languageCode]?['clearFilters'] ?? 'Clear filters';
+  String get allCategories =>
+      _localizedValues[locale.languageCode]?['allCategories'] ?? 'All';
+  String get gameCategory =>
+      _localizedValues[locale.languageCode]?['gameCategory'] ?? 'Game Category';
 
   // 表单验证相关文本
   static final Map<String, Map<String, String>> _validationMessages = {

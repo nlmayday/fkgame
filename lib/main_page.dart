@@ -9,8 +9,8 @@ import 'package:fkgame/features/user/pages/profile_page.dart';
 import 'package:fkgame/core/network/api/client.dart';
 import 'package:fkgame/l10n/app_localizations.dart';
 import 'package:fkgame/features/auth/logic/auth_cubit.dart';
-import 'package:fkgame/features/auth/logic/auth_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fkgame/core/repositories/game_repository.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class _MainPageState extends State<MainPage> {
 
     _pages = [
       BlocProvider(
-        create: (context) => HomeBloc(homeRepository),
+        create: (context) => HomeBloc(homeRepository, GameRepository()),
         child: const HomePage(),
       ),
       const LobbyPage(),

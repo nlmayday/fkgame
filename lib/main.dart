@@ -4,12 +4,25 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get_it/get_it.dart';
+import 'package:fkgame/router.dart';
+import 'package:fkgame/core/theme/app_theme.dart';
+import 'package:fkgame/features/auth/logic/auth_cubit.dart';
+import 'package:fkgame/l10n/app_localizations.dart';
+import 'package:fkgame/core/repositories/game_repository.dart';
+import 'package:fkgame/features/home/logic/home_bloc.dart';
+import 'package:fkgame/features/home/data/repository/home_repository.dart';
+import 'package:fkgame/core/network/api/client.dart';
+import 'package:fkgame/core/services/log.dart';
+import 'package:fkgame/core/services/auth.dart';
+import 'package:fkgame/core/services/storage.dart';
+import 'package:fkgame/features/auth/domain/repositories/auth_repository.dart';
+import 'package:fkgame/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fkgame/core/localization/locale_cubit.dart';
 
-import 'app.dart';
-import 'core/di.dart';
-import 'core/services/log.dart';
-import 'features/auth/logic/auth_cubit.dart';
-import 'features/home/logic/home_bloc.dart';
+final GetIt getIt = GetIt.instance;
 
 // 应用主入口
 Future<void> main() async {
@@ -23,7 +36,7 @@ Future<void> main() async {
   ]);
 
   // 初始化依赖注入
-  await setupDependencies();
+  _setupDependencies();
 
   // 注册Bloc观察器
   Bloc.observer = AppBlocObserver();
@@ -41,6 +54,7 @@ Future<void> main() async {
         providers: [
           BlocProvider<AuthCubit>(create: (context) => getIt<AuthCubit>()),
           BlocProvider<HomeBloc>(create: (context) => getIt<HomeBloc>()),
+          BlocProvider<LocaleCubit>(create: (context) => getIt<LocaleCubit>()),
         ],
         child: const MyApp(),
       ),
@@ -49,6 +63,56 @@ Future<void> main() async {
       developer.log('🔴 全局错误:', error: error, stackTrace: stackTrace);
       getIt<LogService>().logError(error, stackTrace);
     },
+  );
+}
+
+void _setupDependencies() {
+  // 注册服务
+  getIt.registerLazySingleton<LogService>(() => LogService());
+
+  // 注册API客户端
+  getIt.registerLazySingleton<ApiClient>(() => ApiClient());
+
+  // 注册存储服务
+  SharedPreferences.getInstance().then((prefs) {
+    getIt.registerLazySingleton<StorageService>(
+      () => SharedPrefsService(prefs),
+    );
+
+    // 在存储服务注册后注册LocaleCubit
+    getIt.registerFactory<LocaleCubit>(
+      () => LocaleCubit(getIt<StorageService>()),
+    );
+
+    // 在存储服务注册后注册认证服务
+    getIt.registerLazySingleton<AuthService>(
+      () => AuthServiceImpl(getIt<StorageService>()),
+    );
+
+    // 在认证服务注册后注册认证仓库
+    getIt.registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(getIt<ApiClient>(), getIt<StorageService>()),
+    );
+
+    // 最后注册AuthCubit
+    getIt.registerFactory<AuthCubit>(
+      () => AuthCubit(
+        getIt<AuthRepository>(),
+        getIt<AuthService>(),
+        getIt<StorageService>(),
+      ),
+    );
+  });
+
+  // 注册仓库
+  getIt.registerLazySingleton<GameRepository>(() => GameRepository());
+  getIt.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  // 注册Bloc
+  getIt.registerFactory<HomeBloc>(
+    () => HomeBloc(getIt<HomeRepository>(), getIt<GameRepository>()),
   );
 }
 
@@ -78,5 +142,32 @@ class AppBlocObserver extends BlocObserver {
   void onClose(BlocBase bloc) {
     super.onClose(bloc);
     developer.log('🔵 关闭: ${bloc.runtimeType}');
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return MaterialApp.router(
+          title: 'FK Game',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.light,
+          routerConfig: AppRouter.router,
+          locale: localeState.locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('en', ''), Locale('zh', '')],
+        );
+      },
+    );
   }
 }

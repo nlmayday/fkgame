@@ -15,7 +15,6 @@ class ErrorMessages {
 
   // 登录错误
   static const String loginFailed = 'errors.login.failed';
-
   // 注册错误
   static const String registerFailed = 'errors.register.failed';
 

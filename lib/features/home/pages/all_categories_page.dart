@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:get_it/get_it.dart';
+import 'package:fkgame/core/models/game_model.dart';
+import 'package:fkgame/core/repositories/game_repository.dart';
 import 'package:fkgame/features/home/logic/home_bloc.dart';
 import 'package:fkgame/features/home/widgets/game_category_card.dart';
 import 'package:fkgame/l10n/app_localizations.dart';
@@ -21,23 +23,23 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // 类别分组
-  final Map<String, List<String>> _categoryGroups = {
-    '动作游戏': ['动作', '射击', '格斗', '冒险'],
-    '益智游戏': ['益智', '解谜', '卡牌', '策略'],
-    '休闲游戏': ['休闲', '模拟', '音乐'],
-    '体育游戏': ['体育', '赛车', '竞技'],
-    '角色扮演': ['RPG', '角色', '剧情'],
-  };
+  // 类别分组 - 从仓库获取
+  late Map<String, List<String>> _categoryGroups;
 
   // 当前选中的组
   String? _selectedGroup;
+
+  // 游戏仓库
+  final GameRepository _gameRepository = GetIt.instance<GameRepository>();
 
   @override
   void initState() {
     super.initState();
     _filteredCategories = List.from(widget.categories);
     _searchController.addListener(_onSearchChanged);
+
+    // 从仓库获取分类分组
+    _categoryGroups = _gameRepository.getCategoryGroups();
   }
 
   @override
@@ -99,7 +101,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: '搜索游戏类别...',
+                hintText: localizations.searchGameCategories,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -125,7 +127,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
               children: [
-                _buildGroupChip(null, '全部'),
+                _buildGroupChip(null, localizations.allCategories),
                 ..._categoryGroups.keys.map(
                   (group) => _buildGroupChip(group, group),
                 ),
@@ -150,7 +152,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            '没有找到相关游戏类别',
+                            localizations.noGameCategoriesFound,
                             style: Theme.of(
                               context,
                             ).textTheme.titleMedium?.copyWith(
@@ -170,7 +172,7 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
                                   );
                                 });
                               },
-                              child: const Text('清除筛选'),
+                              child: Text(localizations.clearFilters),
                             ),
                           ],
                         ],
@@ -192,8 +194,9 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
                           onTap: () {
                             // Load games for this category
                             context.read<HomeBloc>().add(
-                              SwitchCategory(
-                                categoryId: _filteredCategories[index].id,
+                              LoadCategoryGames(
+                                categoryId:
+                                    _filteredCategories[index].id.toString(),
                               ),
                             );
 
@@ -202,12 +205,16 @@ class _AllCategoriesPageState extends State<AllCategoriesPage> {
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) => AllGamesPage(
-                                      games: [],
-                                      type: GameListType.category,
-                                      categoryId: _filteredCategories[index].id,
-                                      categoryName:
-                                          _filteredCategories[index].name,
+                                    (context) => BlocProvider.value(
+                                      value: context.read<HomeBloc>(),
+                                      child: AllGamesPage(
+                                        type: GameListType.category,
+                                        categoryId:
+                                            _filteredCategories[index].id
+                                                .toString(),
+                                        categoryName:
+                                            _filteredCategories[index].name,
+                                      ),
                                     ),
                               ),
                             );

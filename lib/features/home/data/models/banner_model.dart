@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 
 /// 轮播图模型
 class BannerModel extends Equatable {

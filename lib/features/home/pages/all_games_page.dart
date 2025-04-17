@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/home/logic/home_bloc.dart';
 import 'package:fkgame/features/home/widgets/game_card.dart';
 import 'package:fkgame/l10n/app_localizations.dart';
@@ -10,14 +10,12 @@ enum GameListType { recommended, popular, newGames, category }
 enum SortOption { newest, popular, highestRated }
 
 class AllGamesPage extends StatefulWidget {
-  final List<GameModel> games;
+  final GameListType type;
   final String? categoryId;
   final String? categoryName;
-  final GameListType type;
 
   const AllGamesPage({
     Key? key,
-    required this.games,
     required this.type,
     this.categoryId,
     this.categoryName,
@@ -28,8 +26,8 @@ class AllGamesPage extends StatefulWidget {
 }
 
 class _AllGamesPageState extends State<AllGamesPage> {
-  late List<GameModel> _games;
-  late List<GameModel> _filteredGames;
+  late List<GameModel> _games = [];
+  late List<GameModel> _filteredGames = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   bool _hasError = false;
@@ -44,10 +42,11 @@ class _AllGamesPageState extends State<AllGamesPage> {
   @override
   void initState() {
     super.initState();
-    _games = List.from(widget.games);
-    _filteredGames = List.from(_games);
     _scrollController.addListener(_onScroll);
     _searchController.addListener(_onSearchChanged);
+
+    // 在初始化时加载数据
+    _loadInitialData();
   }
 
   @override
@@ -103,7 +102,7 @@ class _AllGamesPageState extends State<AllGamesPage> {
 
   // Demo method - in real app, you'd fetch from API
   void _resetGamesBasedOnType() {
-    _games = List.from(widget.games);
+    _games = List.from(_games);
     _filterGames();
   }
 
@@ -210,7 +209,7 @@ class _AllGamesPageState extends State<AllGamesPage> {
           if (_games.length < 50) {
             // Limit to 50 items for demo
             // Add more games (duplicating existing ones for demo)
-            final baseGames = widget.games.isEmpty ? _games : widget.games;
+            final baseGames = _games.isEmpty ? _games : _games;
             if (baseGames.isNotEmpty) {
               final moreGames =
                   baseGames.take(4).map((game) {
@@ -242,6 +241,36 @@ class _AllGamesPageState extends State<AllGamesPage> {
           }
         });
       });
+    }
+  }
+
+  void _loadInitialData() {
+    if (widget.type == GameListType.category && widget.categoryId != null) {
+      context.read<HomeBloc>().add(
+        LoadCategoryGames(
+          categoryId: widget.categoryId!,
+          page: 1,
+          pageSize: 20,
+        ),
+      );
+    } else {
+      // 根据类型加载不同的游戏
+      String type;
+      switch (widget.type) {
+        case GameListType.recommended:
+        case GameListType.popular:
+          type = 'popular';
+          break;
+        case GameListType.newGames:
+          type = 'new';
+          break;
+        default:
+          type = 'popular';
+      }
+
+      context.read<HomeBloc>().add(
+        LoadAllGames(type: type, page: 1, pageSize: 20),
+      );
     }
   }
 

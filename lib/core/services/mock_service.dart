@@ -1,6 +1,7 @@
-import 'package:fkgame/features/home/data/models/game_model.dart';
+import 'package:fkgame/core/models/game_model.dart';
 import 'package:fkgame/features/home/data/models/banner_model.dart';
-import 'package:fkgame/features/home/data/models/category_model.dart';
+import 'package:fkgame/core/models/category_model.dart';
+import 'package:flutter/material.dart';
 
 /// 模拟数据服务，集中管理所有模拟数据
 /// 后期可以轻松切换到真实API
@@ -9,6 +10,143 @@ class MockService {
   static final MockService _instance = MockService._internal();
   factory MockService() => _instance;
   MockService._internal();
+
+  /// 获取充值选项列表
+  List<Map<String, dynamic>> getRechargeOptions() {
+    return [
+      {'amount': 100, 'bonus': 0, 'price': 10, 'popular': false},
+      {'amount': 200, 'bonus': 20, 'price': 20, 'popular': false},
+      {'amount': 500, 'bonus': 100, 'price': 50, 'popular': true},
+      {'amount': 1000, 'bonus': 300, 'price': 100, 'popular': false},
+      {'amount': 2000, 'bonus': 1000, 'price': 200, 'popular': false},
+    ];
+  }
+
+  /// 获取支付方式列表
+  List<Map<String, dynamic>> getPaymentMethods() {
+    return [
+      {
+        'id': 'alipay',
+        'name': '支付宝',
+        'icon': Icons.account_balance_wallet,
+        'fee': 0.0,
+      },
+      {'id': 'wechat', 'name': '微信支付', 'icon': Icons.chat, 'fee': 0.0},
+      {'id': 'bank', 'name': '银行卡', 'icon': Icons.credit_card, 'fee': 2.0},
+      {'id': 'apple', 'name': 'Apple Pay', 'icon': Icons.apple, 'fee': 0.0},
+      {
+        'id': 'paypal',
+        'name': 'PayPal',
+        'icon': Icons.account_balance,
+        'fee': 3.0,
+      },
+    ];
+  }
+
+  /// 获取充值优惠活动
+  List<Map<String, dynamic>> getRechargePromotions() {
+    return [
+      {
+        'id': 1,
+        'title': '首充双倍',
+        'description': '首次充值任意金额，游戏点数翻倍',
+        'startDate': DateTime.now().subtract(const Duration(days: 7)),
+        'endDate': DateTime.now().add(const Duration(days: 30)),
+        'conditions': '仅限首次充值用户',
+        'active': true,
+      },
+      {
+        'id': 2,
+        'title': '每周福利',
+        'description': '周末充值额外赠送10%游戏点',
+        'startDate': DateTime.now().subtract(const Duration(days: 14)),
+        'endDate': DateTime.now().add(const Duration(days: 60)),
+        'conditions': '仅限周六和周日',
+        'active': true,
+      },
+      {
+        'id': 3,
+        'title': '会员特惠',
+        'description': 'VIP用户充值额外赠送5%游戏点',
+        'startDate': DateTime.now().subtract(const Duration(days: 30)),
+        'endDate': DateTime.now().add(const Duration(days: 365)),
+        'conditions': '仅限VIP用户',
+        'active': true,
+      },
+    ];
+  }
+
+  /// 获取用户充值历史记录
+  List<Map<String, dynamic>> getUserRechargeHistory(int userId) {
+    // 模拟一些充值历史记录
+    return [
+      {
+        'id': 'R202305120001',
+        'userId': userId,
+        'amount': 100,
+        'bonus': 0,
+        'price': 10,
+        'paymentMethod': 'alipay',
+        'status': 'success',
+        'createdAt': DateTime.now().subtract(const Duration(days: 30)),
+      },
+      {
+        'id': 'R202306150002',
+        'userId': userId,
+        'amount': 500,
+        'bonus': 100,
+        'price': 50,
+        'paymentMethod': 'wechat',
+        'status': 'success',
+        'createdAt': DateTime.now().subtract(const Duration(days: 15)),
+      },
+      {
+        'id': 'R202307010003',
+        'userId': userId,
+        'amount': 1000,
+        'bonus': 300,
+        'price': 100,
+        'paymentMethod': 'alipay',
+        'status': 'success',
+        'createdAt': DateTime.now().subtract(const Duration(days: 5)),
+      },
+      {
+        'id': 'R202307050004',
+        'userId': userId,
+        'amount': 200,
+        'bonus': 20,
+        'price': 20,
+        'paymentMethod': 'bank',
+        'status': 'pending',
+        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
+      },
+    ];
+  }
+
+  /// 获取分类分组数据
+  Map<String, List<String>> getCategoryGroups() {
+    return {
+      '动作游戏': ['动作', '射击', '格斗', '冒险'],
+      '益智游戏': ['益智', '解谜', '卡牌', '策略'],
+      '休闲游戏': ['休闲', '模拟', '音乐'],
+      '体育游戏': ['体育', '赛车', '竞技'],
+      '角色扮演': ['RPG', '角色', '剧情'],
+    };
+  }
+
+  /// 获取分类游戏总数
+  int getCategoryGameCount(String categoryId) {
+    // 模拟每个分类的游戏总数
+    final Map<String, int> categoryCounts = {
+      '1': 30, // 休闲游戏
+      '2': 25, // 益智游戏
+      '3': 40, // 动作游戏
+      '4': 15, // 策略游戏
+      '5': 35, // 冒险游戏
+    };
+
+    return categoryCounts[categoryId] ?? 0;
+  }
 
   /// 获取模拟轮播图数据
   List<BannerModel> getBanners() {

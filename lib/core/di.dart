@@ -10,6 +10,7 @@ import 'package:fkgame/core/constants/api.dart';
 import 'package:fkgame/core/theme/theme_cubit.dart';
 import 'package:fkgame/core/localization/locale_cubit.dart';
 import 'package:fkgame/core/services/mock_service.dart';
+import 'package:fkgame/core/repositories/game_repository.dart';
 
 // 认证模块导入
 import 'package:fkgame/features/auth/data/repository/auth_repository_impl.dart';
@@ -68,6 +69,9 @@ Future<void> setupDependencies() async {
 
   // 注册MockService
   getIt.registerLazySingleton<MockService>(() => MockService());
+
+  // 注册全局游戏仓库（单例）
+  getIt.registerLazySingleton<GameRepository>(() => GameRepository());
 
   // 数据仓库
   _registerRepositories();
@@ -130,7 +134,12 @@ void _registerCubits() {
   );
 
   // 首页功能
-  getIt.registerFactory<HomeBloc>(() => HomeBloc(getIt<HomeRepository>()));
+  getIt.registerFactory<HomeBloc>(
+    () => HomeBloc(
+      getIt<HomeRepository>(),
+      getIt<GameRepository>(), // 添加全局游戏仓库依赖
+    ),
+  );
 
   // 其他功能 - 暂时注释
   /*
